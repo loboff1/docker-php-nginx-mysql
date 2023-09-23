@@ -16,5 +16,5 @@ Running encrypted playbook
 
 Command for running at command line:
 
-    ansible-playbook playbook-registry.yml
+    ansible-playbook playbook.yml
 

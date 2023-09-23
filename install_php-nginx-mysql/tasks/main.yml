@@ -1,41 +1,28 @@
 ---
 # tasks file for install php-nginx-mysql
 
-- name: CREATE NEW DIR
+- name: CREATE NEW DIRECTORIES TO SERVER
   file:
     path: "{{ item }}" 
     state: directory
     owner: "{{ user }}"
     mode: '0775'
-  with_items:
+  loop:
     - ./docker/nginx
     - ./docker/php
+    - ./docker/website
                   
-- name: CREATE NEW CONFIG FOR NGINX
+- name: CREATE CONFIG FILES TO SERVER
   template:
-    src: "files/nginx.conf.j2"
-    dest: "./docker/nginx/nginx.conf"
-      
-- name: CREATE NEW PHP PAGE
-  template:
-    src: "files/index.php.j2"
-    dest: "./docker/index.php"
-
-- name: COPY ENV TO SERVER
-  template:
-    src: "files/.env.j2"
-    dest: "./docker/.env"
-    
-- name: COPY DOCKERFILE TO SERVER
-  template:
-    src: "files/Dockerfile.j2"
-    dest: "./docker/php/Dockerfile"
-
-- name: COPY DOCKER-COMPOSE TO SERVER
-  template:
-    src: "files/docker-compose.yml.j2"
-    dest: "./docker/docker-compose.yml"
-                  
+    src: "files/{{ item.src }}"
+    dest: "./docker/{{ item.dest }}"
+  loop:
+     - { src: 'nginx.conf.j2', dest: 'nginx/nginx.conf' }
+     - { src: 'index.php.j2', dest: '/website/index.php' }
+     - { src: '.env.j2', dest: '.env' }
+     - { src: 'Dockerfile.j2', dest: '/php/Dockerfile' }    
+     - { src: 'docker-compose.yml.j2', dest: '/docker-compose.yml' }  
+                          
 - name: RUN DOCKER-COMPOSE
   become: true
   shell: docker-compose up -d

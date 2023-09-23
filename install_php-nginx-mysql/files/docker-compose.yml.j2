@@ -5,14 +5,12 @@ services:
     build: ./php
     container_name: task-php
     environment:
-      - MYSQL_HOST=${MYSQL_HOST}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     restart: always
-    working_dir: /var/www/
+    working_dir: /var/www/html
     volumes:
-      - ./:/var/www
+      - ./website:/var/www/html
     depends_on:
       - mysql
     networks:
@@ -25,7 +23,7 @@ services:
     ports:
       - {{ port_nginx }}:80
     volumes:
-      - ./:/var/www
+      - ./website:/var/www/html
       - ./nginx:/etc/nginx/conf.d 
     depends_on:
       - php 
@@ -36,8 +34,13 @@ services:
     image: mysql:{{ ver_mysql }}
     container_name: task-mysql
     restart: always
+    ports:
+      - {{ port_mysql }}:3306    
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
     volumes:
       - mysql_php:/mysql.sql       
     networks:

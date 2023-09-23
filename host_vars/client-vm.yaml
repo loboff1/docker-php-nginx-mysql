@@ -16,4 +16,3 @@ ansible_sudo_pass: !vault |
           3739373032306632300a396333366338333963383732613766613738343161393032653465356338
           3831
 
-ansible_python_interpreter: /usr/bin/python3

@@ -1,0 +1,44 @@
+---
+# tasks file for install php-nginx-mysql
+
+- name: CREATE NEW DIR
+  file:
+    path: "{{ item }}" 
+    state: directory
+    owner: "{{ user }}"
+    mode: '0775'
+  with_items:
+    - ./docker/nginx
+    - ./docker/php
+                  
+- name: CREATE NEW CONFIG FOR NGINX
+  template:
+    src: "files/nginx.conf.j2"
+    dest: "./docker/nginx/nginx.conf"
+      
+- name: CREATE NEW PHP PAGE
+  template:
+    src: "files/index.php.j2"
+    dest: "./docker/index.php"
+
+- name: COPY ENV TO SERVER
+  template:
+    src: "files/.env.j2"
+    dest: "./docker/.env"
+    
+- name: COPY DOCKERFILE TO SERVER
+  template:
+    src: "files/Dockerfile.j2"
+    dest: "./docker/php/Dockerfile"
+
+- name: COPY DOCKER-COMPOSE TO SERVER
+  template:
+    src: "files/docker-compose.yml.j2"
+    dest: "./docker/docker-compose.yml"
+                  
+- name: RUN DOCKER-COMPOSE
+  become: true
+  shell: docker-compose up -d
+  args:
+    chdir: ./docker
+  notify: RESTART NGINX

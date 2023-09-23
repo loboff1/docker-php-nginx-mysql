@@ -1,0 +1,16 @@
+---
+# vars file for install php-nginx-mysql
+
+user: "andrey"
+ver_mysql: "8.1.0"
+
+port_nginx: "80"
+
+port_php: "9000"
+ver_php: "8.2"
+
+MYSQL_ROOT_PASSWORD: "task"
+MYSQL_DATABASE: "task"
+MYSQL_USER: "task"
+MYSQL_PASSWORD: "task"
+MYSQL_HOST: "mysql"

@@ -1,0 +1,8 @@
+---
+# handlers file for install_php-nginx-mysql
+
+- name: RESTART NGINX
+  become: true
+  shell: docker exec -it task-nginx nginx -s reload
+    
+    
